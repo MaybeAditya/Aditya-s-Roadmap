@@ -1,0 +1,2061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP Roadmap — Beginner to Grandmaster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d47;
+    --text: #ccd6f6;
+    --text-dim: #6b7fa3;
+    --text-muted: #3d4f6e;
+    --green: #00ff87;
+    --green-dim: #00c46b;
+    --amber: #ffc857;
+    --orange: #ff8c42;
+    --red: #ff4d6d;
+    --blue: #4fc3f7;
+    --purple: #c084fc;
+    --glow-green: 0 0 20px rgba(0,255,135,0.15);
+    --glow-amber: 0 0 20px rgba(255,200,87,0.15);
+    --glow-red: 0 0 20px rgba(255,77,109,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,135,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,135,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,14,23,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo .bracket { color: var(--green); }
+  .logo .title { color: var(--text); }
+
+  .phase-tabs {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .phase-tabs::-webkit-scrollbar { display: none; }
+
+  .phase-tab {
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--text-dim);
+  }
+  .phase-tab:hover { background: var(--surface); color: var(--text); }
+  .phase-tab.active.p1 { background: rgba(0,255,135,0.1); border-color: var(--green); color: var(--green); }
+  .phase-tab.active.p2 { background: rgba(255,200,87,0.1); border-color: var(--amber); color: var(--amber); }
+  .phase-tab.active.p3 { background: rgba(255,77,109,0.1); border-color: var(--red); color: var(--red); }
+
+  .header-stats {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 11px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .stat-item { display: flex; align-items: center; gap: 6px; }
+  .stat-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .stat-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .stat-dot.amber { background: var(--amber); }
+  .stat-dot.red { background: var(--red); }
+
+  /* LAYOUT */
+  .layout {
+    display: flex;
+    padding-top: 60px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    height: calc(100vh - 60px);
+    position: sticky;
+    top: 60px;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .sidebar-phase {
+    margin-bottom: 8px;
+  }
+
+  .sidebar-phase-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .sidebar-phase-header:hover { color: var(--text-dim); }
+  .sidebar-phase-header .phase-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 16px 5px 24px;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    margin-left: 8px;
+    line-height: 1.4;
+  }
+  .sidebar-link:hover { color: var(--text); background: var(--surface); }
+  .sidebar-link.active { color: var(--green); border-left-color: var(--green); background: rgba(0,255,135,0.05); }
+
+  .sidebar-link .progress-mini {
+    margin-left: auto;
+    font-size: 9px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .sidebar-level-label {
+    padding: 4px 16px 2px 24px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    flex: 1;
+    padding: 32px 40px;
+    max-width: 900px;
+  }
+
+  /* PHASE SECTION */
+  .phase-section { display: none; }
+  .phase-section.active { display: block; }
+
+  .phase-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .phase-badge.p1 { background: rgba(0,255,135,0.1); color: var(--green); border: 1px solid rgba(0,255,135,0.3); }
+  .phase-badge.p2 { background: rgba(255,200,87,0.1); color: var(--amber); border: 1px solid rgba(255,200,87,0.3); }
+  .phase-badge.p3 { background: rgba(255,77,109,0.1); color: var(--red); border: 1px solid rgba(255,77,109,0.3); }
+
+  .phase-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .phase-desc {
+    color: var(--text-dim);
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* LEVEL BLOCK */
+  .level-block { margin-bottom: 40px; }
+
+  .level-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .level-header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .level-header.p1::before { background: var(--green); }
+  .level-header.p2::before { background: var(--amber); }
+  .level-header.p3::before { background: var(--red); }
+
+  .level-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .level-number.p1 { background: rgba(0,255,135,0.1); color: var(--green); }
+  .level-number.p2 { background: rgba(255,200,87,0.1); color: var(--amber); }
+  .level-number.p3 { background: rgba(255,77,109,0.1); color: var(--red); }
+
+  .level-info { flex: 1; }
+  .level-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .level-rating {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .level-progress-wrap { display: flex; align-items: center; gap: 10px; }
+  .level-progress-bar {
+    width: 100px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .level-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  .p1 .level-progress-fill { background: var(--green); }
+  .p2 .level-progress-fill { background: var(--amber); }
+  .p3 .level-progress-fill { background: var(--red); }
+  .level-progress-text { font-size: 10px; color: var(--text-dim); white-space: nowrap; }
+
+  /* SECTION CARD */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .section-card:hover { border-color: #2a3d5a; }
+
+  .section-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface2);
+    transition: background 0.15s;
+  }
+  .section-card-header:hover { background: #1f2d40; }
+
+  .section-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .section-icon.p1 { background: rgba(0,255,135,0.1); }
+  .section-icon.p2 { background: rgba(255,200,87,0.1); }
+  .section-icon.p3 { background: rgba(255,77,109,0.1); }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .section-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-progress-bar {
+    width: 60px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .section-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--green);
+    transition: width 0.3s;
+  }
+
+  .section-count { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+  .chevron {
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    font-size: 10px;
+  }
+  .section-card.open .chevron { transform: rotate(180deg); }
+
+  .section-body {
+    display: none;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .section-card.open .section-body { display: block; }
+
+  /* RESOURCES */
+  .resources-block {
+    margin-bottom: 20px;
+  }
+  .block-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .block-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .resource-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(30,45,71,0.5);
+  }
+  .resource-item:last-child { border-bottom: none; }
+  .resource-bullet { color: var(--blue); font-size: 10px; margin-top: 3px; flex-shrink: 0; }
+  .resource-link {
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 11.5px;
+    line-height: 1.5;
+    word-break: break-all;
+    transition: color 0.15s;
+  }
+  .resource-link:hover { color: #81d4fa; text-decoration: underline; }
+
+  /* TASKS */
+  .tasks-block { margin-bottom: 20px; }
+  .tasks-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .task-item:hover { background: var(--surface2); border-color: var(--border); }
+  .task-item.done { opacity: 0.5; }
+  .task-item.done .task-link { text-decoration: line-through; color: var(--text-muted); }
+
+  .task-checkbox {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    cursor: pointer;
+    font-size: 9px;
+    color: transparent;
+  }
+  .task-item.done .task-checkbox {
+    background: var(--green);
+    border-color: var(--green);
+    color: #000;
+    box-shadow: 0 0 8px rgba(0,255,135,0.3);
+  }
+
+  .task-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .task-link {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 11.5px;
+    flex: 1;
+    word-break: break-all;
+    transition: color 0.15s;
+  }
+  .task-link:hover { color: var(--green); }
+
+  .task-platform {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .plat-cf { background: rgba(255,141,0,0.1); color: #ff8d00; }
+  .plat-lc { background: rgba(255,161,22,0.1); color: #ffa116; }
+  .plat-cses { background: rgba(100,181,246,0.1); color: #64b5f6; }
+  .plat-atcoder { background: rgba(192,192,192,0.1); color: #c0c0c0; }
+  .plat-spoj { background: rgba(134,239,172,0.1); color: #86efac; }
+  .plat-gfg { background: rgba(168,85,247,0.1); color: #a855f7; }
+  .plat-other { background: rgba(107,127,163,0.1); color: var(--text-dim); }
+
+  /* NOTES */
+  .notes-block { }
+  .notes-textarea {
+    width: 100%;
+    min-height: 80px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    padding: 10px 12px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  .notes-textarea::placeholder { color: var(--text-muted); }
+  .notes-textarea:focus { border-color: rgba(0,255,135,0.3); box-shadow: 0 0 0 2px rgba(0,255,135,0.05); }
+
+  .notes-saved-indicator {
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-align: right;
+    height: 12px;
+    transition: opacity 0.3s;
+  }
+  .notes-saved-indicator.show { color: var(--green); }
+
+  /* SEARCH BAR */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 10px 12px 10px 36px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: rgba(0,255,135,0.4); }
+  .search-input::placeholder { color: var(--text-muted); }
+
+  /* PROGRESS OVERVIEW */
+  .overview-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .overview-card {
+    flex: 1;
+    min-width: 150px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .overview-card .ov-label { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; }
+  .overview-card .ov-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .ov-value.p1 { color: var(--green); }
+  .ov-value.p2 { color: var(--amber); }
+  .ov-value.p3 { color: var(--red); }
+  .ov-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .ov-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+  .ov-bar-fill.p1 { background: var(--green); }
+  .ov-bar-fill.p2 { background: var(--amber); }
+  .ov-bar-fill.p3 { background: var(--red); }
+
+  /* NOTICE / TIP BOX */
+  .tip-box {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 11.5px;
+    line-height: 1.6;
+    border-left: 3px solid;
+  }
+  .tip-box.green { background: rgba(0,255,135,0.05); border-color: var(--green); color: var(--text-dim); }
+  .tip-box.amber { background: rgba(255,200,87,0.05); border-color: var(--amber); color: var(--text-dim); }
+  .tip-box.red { background: rgba(255,77,109,0.05); border-color: var(--red); color: var(--text-dim); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2a3d5a; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 20px 16px; }
+    .phase-title { font-size: 22px; }
+  }
+
+  .expand-all-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 16px;
+  }
+  .expand-all-btn:hover { color: var(--text); border-color: #2a3d5a; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="bracket">{</span>
+    <span class="title">CP Roadmap</span>
+    <span class="bracket">}</span>
+  </div>
+  <div class="phase-tabs">
+    <button class="phase-tab p1 active" onclick="showPhase('p1')">Phase 1 — Foundations</button>
+    <button class="phase-tab p2" onclick="showPhase('p2')">Phase 2 — Expert → CM+</button>
+    <button class="phase-tab p3" onclick="showPhase('p3')">Phase 3 — CM → GM+</button>
+  </div>
+  <div class="header-stats">
+    <div class="stat-item"><div class="stat-dot green"></div><span id="stat-done">0</span> done</div>
+    <div class="stat-item"><div class="stat-dot amber"></div><span id="stat-total">0</span> total</div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="main" id="main-content"></main>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const PHASES = [
+  {
+    id: 'p1',
+    name: 'Phase 1 — Foundations',
+    title: 'Beginner to Expert',
+    rating: '~800 → 1800',
+    desc: 'C++ fundamentals, STL, recursion, DP, greedy algorithms, binary search, segment trees, and trees. Complete all sections before moving to Phase 2.',
+    color: 'green',
+    levels: [
+      {
+        name: 'C++ & Problem Solving Basics',
+        rating: '800 → 1200',
+        sections: [
+          {
+            id: 'cpp-basics-1',
+            icon: '⚙️',
+            title: 'C++ Basics 1',
+            resources: [
+              { name: 'Lecture slides 1.1 C++ Basics 1', url: 'https://drive.google.com/file/d/1wRiGozqal1s7YD0dH88dmS2ZNUR2Kqp1/view' },
+              { name: 'C++ Basics 1.1 Feedback Form', url: 'https://forms.gle/p2DtZzQuQ2xmutae8' },
+              { name: 'Lecture Slides 1.1 Introduction to Online Judges', url: 'https://drive.google.com/file/d/1s9IQzo11vRofExgv5dkNdWcwLjoGNqnP/view' },
+              { name: 'Introduction to Online Judges Feedback Form', url: 'https://forms.gle/A3dohxG5ZjnnCcuT9' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/J' },
+              { label: 'Task 2', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/T' },
+              { label: 'Task 3', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/F' },
+              { label: 'Task 4', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/326907/problem/D' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/4/A' },
+              { label: 'Task 6', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/G' },
+              { label: 'Task 7', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/I' },
+              { label: 'Task 8', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/K' },
+              { label: 'Task 9', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/L' },
+              { label: 'Task 10', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/N' },
+              { label: 'Task 11', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/Y' },
+              { label: 'Task 12', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/W' },
+              { label: 'Task 13', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/V' },
+              { label: 'Task 14', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/U' },
+              { label: 'Task 15', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/Z' },
+            ]
+          },
+          {
+            id: 'cpp-basics-2',
+            icon: '⚙️',
+            title: 'C++ Basics 2 + Online Judges',
+            resources: [
+              { name: 'Lecture Slides C++ Basics 2', url: 'https://drive.google.com/file/d/1yoiTXwkI79m8gHESUwQb0YCD9fiW4BBb/view' },
+              { name: 'Feedback Form C++ Basics 2', url: 'https://forms.gle/nBSVjRK6xUNar4kE8' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/K' },
+              { label: 'Task 2', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/H' },
+              { label: 'Task 3', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/C' },
+              { label: 'Task 4', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/Z' },
+              { label: 'Task 5', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/J' },
+              { label: 'Task 6', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219774/problem/O' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1/A' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/630/A' },
+              { label: 'Task 9', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/329103/problem/G' },
+              { label: 'Task 10', url: 'https://atcoder.jp/contests/abc258/tasks/abc258_a' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/271/A' },
+              { label: 'Task 12', url: 'https://codeforces.com/problemset/problem/1030/A' },
+              { label: 'Task 13', url: 'https://atcoder.jp/contests/abc263/tasks/abc263_a' },
+            ]
+          },
+          {
+            id: 'complexity',
+            icon: '⏱',
+            title: 'Time and Space Complexity',
+            resources: [
+              { name: 'Lecture slides Time Complexity 23-04-2023', url: 'https://drive.google.com/file/d/1CyrW0c2nB7-vaJV4X5hbzS52-9HEmP7k/view' },
+              { name: 'Feedback Form Time Complexity', url: 'https://forms.gle/dDbZ37HD8JWiyznb8' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/1535/A' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/214/A' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/320/A' },
+              { label: 'Task 4', url: 'https://www.hackerrank.com/challenges/summing-the-n-series/problem' },
+              { label: 'Task 5', url: 'https://www.hackerrank.com/challenges/number-groups/problem' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/758/A' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1374/A' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1512/A' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/199/A' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1269/A' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/1496/A' },
+              { label: 'Task 12', url: 'https://codeforces.com/problemset/problem/1428/C' },
+              { label: 'Task 13', url: 'https://codeforces.com/problemset/problem/1633/C' },
+              { label: 'Task 14', url: 'https://codeforces.com/problemset/problem/1499/B' },
+            ]
+          },
+          {
+            id: 'problem-solving-general',
+            icon: '🧩',
+            title: 'Problem Solving (General)',
+            resources: [
+              { name: 'Lecture slides Problem Solving 1 + Strings', url: 'https://drive.google.com/file/d/1IkzlzWHQtMTN8Zd0chvvLFl5WMDV3nQX/view' },
+              { name: 'Feedback Form Problem Solving 1 + Strings', url: 'https://forms.gle/kQ4wf4oJwnG4Kz2bA' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1083' },
+              { label: 'Task 2', url: 'https://cses.fi/problemset/task/1094' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1713' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/find-the-distance-value-between-two-arrays/' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1335/C' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1374/B' },
+              { label: 'Task 7', url: 'https://cses.fi/problemset/task/1071' },
+              { label: 'Task 8', url: 'https://cses.fi/problemset/task/1755' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1343/C' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1327/A' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'Number Theory & STL',
+        rating: '1000 → 1400',
+        sections: [
+          {
+            id: 'number-theory-1',
+            icon: '🔢',
+            title: 'Number Theory',
+            resources: [
+              { name: 'Lecture slides Number Theory 2', url: 'https://drive.google.com/file/d/1FKoGyCg2P2sTGmivYYPH790GOTWn_1ku/view' },
+              { name: 'Feedback Form Number Theory 2', url: 'https://forms.gle/LiCo5Ckj252M7NFU6' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/contest/1549/problem/A' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1475/A' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1165/D' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/17/A' },
+              { label: 'Task 5', url: 'https://www.hackerrank.com/challenges/sherlock-and-divisors/problem' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1474/B' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1143/B' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/797/A' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/682/A' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1521/A' },
+              { label: 'Task 11', url: 'https://www.codechef.com/problems/STRNO' },
+              { label: 'Task 12', url: 'https://codeforces.com/problemset/problem/1285/C' },
+              { label: 'Task 13', url: 'https://codeforces.com/problemset/problem/550/C' },
+            ]
+          },
+          {
+            id: 'searching-sorting',
+            icon: '🔍',
+            title: 'Searching and Sorting',
+            resources: [
+              { name: 'Lecture slides Searching and Sorting', url: 'https://drive.google.com/file/d/1DEwBux8RGVaa1vXRG25WjGQ3l_lUFlvA/view' },
+              { name: 'Feedback Form Searching and Sorting', url: 'https://forms.gle/LtCUeh5JNbpZHxVu9' },
+              { name: 'Lecture slides Binary Search', url: 'https://drive.google.com/file/d/1nlGLIK_LCkx9RslW26IWIfC3-HcmsrLc/view' },
+              { name: 'Feedback Form Binary Search', url: 'https://forms.gle/KkjABM2xZRA5wQ94A' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://leetcode.com/problems/sum-of-all-odd-length-subarrays/' },
+              { label: 'Task 2', url: 'https://leetcode.com/problems/find-pivot-index/' },
+              { label: 'Task 3', url: 'https://leetcode.com/problems/sqrtx/' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/search-insert-position/' },
+              { label: 'Task 5', url: 'https://leetcode.com/problems/product-of-array-except-self/' },
+              { label: 'Task 6', url: 'https://leetcode.com/problems/peak-index-in-a-mountain-array/' },
+              { label: 'Task 7', url: 'https://leetcode.com/problems/missing-number/' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1675/B' },
+              { label: 'Task 9', url: 'https://codeforces.com/group/c3FDl9EUi9/contest/262795/problem/B' },
+              { label: 'Task 10', url: 'https://codeforces.com/group/c3FDl9EUi9/contest/262795/problem/C' },
+              { label: 'Task 11', url: 'https://codeforces.com/group/c3FDl9EUi9/contest/262795/problem/D' },
+            ]
+          },
+          {
+            id: 'cpp-stl',
+            icon: '📦',
+            title: 'C++ STL',
+            resources: [
+              { name: 'Lecture slides C++ STL 1', url: 'https://drive.google.com/file/d/1N70APv9ppM-KDHKqVeWiPFscUHgCl_X8/view' },
+              { name: 'Feedback Form C++ STL 1', url: 'https://forms.gle/YpVdVG3px5gzWUhD8' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://www.codechef.com/LRNDSA03/problems/SAVKONO' },
+              { label: 'Task 2', url: 'https://www.codechef.com/LRNDSA03/problems/CVOTE' },
+              { label: 'Task 3', url: 'https://www.codechef.com/LRNDSA03/problems/DPAIRS' },
+              { label: 'Task 4', url: 'https://www.codechef.com/LRNDSA03/problems/FENCE' },
+              { label: 'Task 5', url: 'https://www.codechef.com/LRNDSA04/problems/STACKS' },
+              { label: 'Task 6', url: 'https://www.codechef.com/LRNDSA04/problems/EURON' },
+              { label: 'Task 7', url: 'https://www.codechef.com/LRNDSA04/problems/QHOUSE' },
+              { label: 'Task 8', url: 'https://cses.fi/problemset/task/1755' },
+              { label: 'Task 9', url: 'https://www.codechef.com/LRNDSA02/problems/NOTALLFL' },
+              { label: 'Task 10', url: 'https://www.codechef.com/LRNDSA03/problems/EXUNC' },
+            ]
+          },
+          {
+            id: 'cpp-stl-revision',
+            icon: '📦',
+            title: 'C++ STL Revision',
+            resources: [
+              { name: 'Lecture slides 2.1 C++ STL Revision', url: 'https://drive.google.com/file/d/1zVQFvG3_OXWi5svr-IaQgy_wXn-z6y6e/view' },
+              { name: 'Lecture slides 2.2 C++ STL Revision', url: 'https://drive.google.com/file/d/1O8TqVHO-oEAvBa623Q_MltFV3fuo5xa-/view' },
+              { name: 'Feedback Form 2.1 C++ STL Revision', url: 'https://forms.gle/vWn5Ag21n6smv5579' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/Z' },
+              { label: 'Task 2', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/K' },
+              { label: 'Task 3', url: 'https://www.codechef.com/LRNDSA02/problems/STUPMACH' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/734/A' },
+              { label: 'Task 5', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219432/problem/E' },
+              { label: 'Task 6', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/219158/problem/X' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/4/A' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/71/A' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/50/A' },
+              { label: 'Task 10', url: 'https://leetcode.com/problems/kth-largest-element-in-a-stream/' },
+              { label: 'Task 11', url: 'https://leetcode.com/problems/valid-parentheses/' },
+              { label: 'Task 12', url: 'https://www.codechef.com/LRNDSA02/problems/ZCO12001' },
+              { label: 'Task 13', url: 'https://www.codechef.com/LRNDSA02/problems/COMPILER' },
+              { label: 'Task 14', url: 'https://codeforces.com/problemset/problem/1345/B' },
+              { label: 'Task 15', url: 'https://www.codechef.com/LRNDSA03/problems/SAVKONO' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'Recursion, DP & Backtracking',
+        rating: '1200 → 1600',
+        sections: [
+          {
+            id: 'recursion-memo',
+            icon: '🔄',
+            title: 'Recursion + Memoization',
+            resources: [
+              { name: 'Lecture slides Recursion & Memoization TLE 2.1', url: 'https://drive.google.com/file/d/1cT9_mXQqNUxS2qi0rB1yNURXPkB2rBvP/view' },
+              { name: 'Lecture slides Recursion & Memoization TLE 2.2', url: 'https://drive.google.com/file/d/18otKuwD-djiQyxJKVOiC0xb78WshXwep/view' },
+              { name: 'Feedback Form Recursion & Memoization', url: 'https://forms.gle/d8scPdPScnZtEVh8A' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://leetcode.com/problems/generate-parentheses' },
+              { label: 'Task 2', url: 'https://leetcode.com/problems/letter-combinations-of-a-phone-number/' },
+              { label: 'Task 3', url: 'https://practice.geeksforgeeks.org/problems/subset-sums2234/1' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/subsets-ii/' },
+              { label: 'Task 5', url: 'https://leetcode.com/problems/combination-sum/' },
+              { label: 'Task 6', url: 'https://leetcode.com/problems/combination-sum-ii/' },
+              { label: 'Task 7', url: 'https://leetcode.com/problems/palindrome-partitioning/' },
+              { label: 'Task 8', url: 'https://leetcode.com/problems/n-th-tribonacci-number/description/' },
+              { label: 'Task 9', url: 'https://leetcode.com/problems/climbing-stairs/' },
+              { label: 'Task 10', url: 'https://leetcode.com/problems/different-ways-to-add-parentheses/' },
+            ]
+          },
+          {
+            id: 'backtracking',
+            icon: '↩️',
+            title: 'Backtracking',
+            resources: [
+              { name: 'Lecture Slides Backtracking 22-04-2023 TLE 2', url: 'https://drive.google.com/file/d/1PAB-Wtm16ikCvbOt_RZT-JJRWxItgAAk/view' },
+              { name: 'Feedback Form Backtracking 22-04-2023', url: 'https://forms.gle/YxeWHruZ2qAvaKKS6' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://practice.geeksforgeeks.org/problems/m-coloring-problem-1587115620' },
+              { label: 'Task 2', url: 'https://www.codingninjas.com/codestudio/problems/983635' },
+              { label: 'Task 3', url: 'https://leetcode.com/problems/sudoku-solver/' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/permutations/' },
+              { label: 'Task 5', url: 'https://leetcode.com/problems/count-good-numbers/description/' },
+              { label: 'Task 6', url: 'https://leetcode.com/problems/powx-n/' },
+              { label: 'Task 7', url: 'https://practice.geeksforgeeks.org/problems/knight-walk4521/1' },
+              { label: 'Task 8', url: 'https://leetcode.com/problems/word-break/' },
+              { label: 'Task 9', url: 'https://practice.geeksforgeeks.org/problems/permutation-with-spaces3627/1' },
+              { label: 'Task 10', url: 'https://practice.geeksforgeeks.org/problems/sum-string3151/1' },
+            ]
+          },
+          {
+            id: 'backtracking-ps',
+            icon: '🧩',
+            title: 'Problem Solving (Backtracking)',
+            resources: [
+              { name: 'Lecture Slides Backtracking 01-05-2023 TLE 2', url: 'https://drive.google.com/file/d/1dQT870uj60Xukpsi5Wx2anQ7LfeNanW9/view' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://leetcode.com/problems/n-queens/' },
+              { label: 'Task 2', url: 'https://codeforces.com/group/MWSDmqGsZm/contest/223339/problem/V' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1624' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/permutations-ii/' },
+              { label: 'Task 5', url: 'https://leetcode.com/problems/k-th-symbol-in-grammar/' },
+              { label: 'Task 6', url: 'https://codingcompetitions.withgoogle.com/kickstart/round/00000000008cb33e/00000000009e762e' },
+              { label: 'Task 7', url: 'https://cses.fi/problemset/task/1625' },
+            ]
+          },
+          {
+            id: 'dp-beginner',
+            icon: '📊',
+            title: 'DP Beginner',
+            resources: [
+              { name: 'Lecture Slides 1.1 Dynamic Programming 10-04-2023', url: 'https://drive.google.com/file/d/1ulcycud_rHLC4EJf9dHmONSvOuf4V5lD/view' },
+              { name: 'Feedback Form DP 1.1', url: 'https://forms.gle/5acufGLWxDRHXhER8' },
+              { name: 'Lecture Slides 1.2 Dynamic Programming 13-04-2023', url: 'https://drive.google.com/file/d/1OHX1miM1yo6RiKF3EtzOdCilCzWc5vzb/view' },
+              { name: 'Feedback Form DP 1.2', url: 'https://forms.gle/HscogW5hFFxKu8ka8' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1633' },
+              { label: 'Task 2', url: 'https://cses.fi/problemset/task/1634' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1635' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1350/B' },
+              { label: 'Task 5', url: 'https://cses.fi/problemset/task/1636' },
+              { label: 'Task 6', url: 'https://cses.fi/problemset/task/1637' },
+              { label: 'Task 7', url: 'https://cses.fi/problemset/task/1638' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/455/A' },
+              { label: 'Task 9', url: 'https://atcoder.jp/contests/dp/tasks/dp_e' },
+              { label: 'Task 10', url: 'https://cses.fi/problemset/task/1158' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/1288/C' },
+              { label: 'Task 12', url: 'https://cses.fi/problemset/task/1745' },
+              { label: 'Task 13', url: 'https://atcoder.jp/contests/dp/tasks/dp_m' },
+              { label: 'Task 14', url: 'https://codeforces.com/problemset/problem/166/E' },
+              { label: 'Task 15', url: 'https://cses.fi/problemset/task/1140' },
+              { label: 'Task 16', url: 'https://cses.fi/problemset/task/1639' },
+              { label: 'Task 17', url: 'https://atcoder.jp/contests/dp/tasks/dp_i' },
+            ]
+          },
+          {
+            id: 'dp-intermediate',
+            icon: '📊',
+            title: 'DP Intermediate',
+            resources: [
+              { name: 'Lecture Slides DP 2.1', url: 'https://drive.google.com/file/d/10FwpkyIXh4Pt7cP3ULds4N4dm9_2zZwr/view' },
+              { name: 'Feedback Form DP 2.1', url: 'https://forms.gle/VrDYw4HW5E37gecFA' },
+              { name: 'Lecture Slides DP 2.2', url: 'https://drive.google.com/file/d/1utKvMRTLNrL00--xdMePKXA2Pdns2Soa/view' },
+              { name: 'Feedback Form DP 2.2', url: 'https://forms.gle/rfPy7kGfzThSoXog8' },
+              { name: 'Lecture Slides DP 2.3', url: 'https://drive.google.com/file/d/1GlZxCYD0Si9MnBSkyQtU-prcyvkuc45N/view' },
+              { name: 'Feedback Form DP 2.3', url: 'https://forms.gle/YaTzzVdAHStNPDbw7' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/1389/B' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1249/E' },
+              { label: 'Task 3', url: 'https://codeforces.com/contest/1151/problem/B' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1498/C' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1625/C' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1392/D' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1077/F1' },
+              { label: 'Task 8', url: 'https://atcoder.jp/contests/dp/tasks/dp_n' },
+              { label: 'Task 9', url: 'https://codingcompetitions.withgoogle.com/kickstart/round/00000000008cb33e/00000000009e762e' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1360/F' },
+            ]
+          },
+          {
+            id: 'dp-advanced',
+            icon: '📊',
+            title: 'DP Advanced (Bitmask)',
+            resources: [
+              { name: 'Lecture Slides DP 3.1', url: 'https://drive.google.com/file/d/1N4TGvX_KNPvznHT25tMrl0qchzn0g-pe/view' },
+              { name: 'Feedback Form DP 3.1', url: 'https://forms.gle/8jRK5Pb5fnrtNMLL7' },
+              { name: 'Lecture slides Bitmask DP 3.2', url: 'https://drive.google.com/file/d/18BAaauVwHRb7vprxGkJpDdgmX-2iZhC5/view' },
+              { name: 'Feedback Form Bitmask DP 3.2', url: 'https://forms.gle/2tstenk7AKRnPSfH7' },
+            ],
+            tasks: [
+              { label: 'Task 2', url: 'https://cses.fi/problemset/task/1140' },
+              { label: 'Task 3', url: 'https://leetcode.com/problems/minimum-xor-sum-of-two-arrays/' },
+              { label: 'Task 4', url: 'https://www.codechef.com/problems/TSHIRTS' },
+              { label: 'Task 5', url: 'https://atcoder.jp/contests/dp/tasks/dp_o' },
+              { label: 'Task 6', url: 'https://cses.fi/problemset/task/1653' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/895/C' },
+              { label: 'Task 8', url: 'https://www.spoj.com/problems/COURIER/' },
+              { label: 'Task 9', url: 'https://codeforces.com/contest/580/problem/D' },
+              { label: 'Task 10', url: 'https://www.spoj.com/problems/ASSIGN/' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'Greedy, Prefix & Binary Search',
+        rating: '1300 → 1700',
+        sections: [
+          {
+            id: 'prefix-sums',
+            icon: '➕',
+            title: 'Prefix Sums, Difference Array, Circular Array',
+            resources: [
+              { name: 'Lecture slides Prefix Sums and Difference Arrays', url: 'https://drive.google.com/file/d/1ETl8B1UfHFgZK4gfy1a-GxvFYzYnLqJp/view' },
+              { name: 'Feedback Form Prefix Sums and Difference Arrays', url: 'https://forms.gle/nhVujZdx6HqwyVfA9' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/816/B' },
+              { label: 'Task 2', url: 'https://leetcode.com/problems/next-greater-element-ii/' },
+              { label: 'Task 3', url: 'https://codeforces.com/contest/1681/problem/B' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/k-diff-pairs-in-an-array' },
+              { label: 'Task 5', url: 'https://leetcode.com/problems/matrix-block-sum' },
+              { label: 'Task 6', url: 'https://codeforces.com/contest/276/problem/C' },
+              { label: 'Task 7', url: 'https://codeforces.com/contest/295/problem/A' },
+              { label: 'Task 8', url: 'https://www.codechef.com/CENS2020/problems/CENS20A' },
+              { label: 'Task 9', url: 'https://atcoder.jp/contests/abc179/tasks/abc179_d' },
+              { label: 'Task 10', url: 'https://www.codechef.com/BYTR20B/problems/AGCY' },
+              { label: 'Task 11', url: 'https://codeforces.com/contest/177/problem/D2' },
+            ]
+          },
+          {
+            id: 'greedy-algo',
+            icon: '💡',
+            title: 'Greedy Algorithms',
+            resources: [
+              { name: 'Lecture Slides Greedy Algorithms 17-04-2023 TLE 3', url: 'https://drive.google.com/file/d/1MVe293n7ojRql71E7ZIniA0Q6eVbrwOW/view' },
+              { name: 'Feedback Form Greedy Algorithms', url: 'https://forms.gle/isLJtN6Z5qgCqmq99' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://leetcode.com/problems/maximum-product-subarray/' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1285/B' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1291/B' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/jump-game-ii/' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1294/C' },
+              { label: 'Task 6', url: 'https://leetcode.com/problems/maximum-score-of-spliced-array/' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1815/A' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1810/C' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1773/E' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1765/N' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/797/C' },
+              { label: 'Task 12', url: 'https://codeforces.com/problemset/problem/1693/A' },
+              { label: 'Task 13', url: 'https://codeforces.com/problemset/problem/91/A' },
+              { label: 'Task 14', url: 'https://codeforces.com/problemset/problem/1660/C' },
+              { label: 'Task 15', url: 'https://codeforces.com/problemset/problem/1742/F' },
+              { label: 'Task 16', url: 'https://codeforces.com/problemset/problem/1380/B' },
+              { label: 'Task 17', url: 'https://codeforces.com/problemset/problem/1338/A' },
+            ]
+          },
+          {
+            id: 'greedy-ps',
+            icon: '🧩',
+            title: 'Problem Solving (Greedy)',
+            resources: [
+              { name: 'Lecture Slides Greedy Problem Solving 23-04-2023', url: 'https://drive.google.com/file/d/1cD6VQoV-5Ut-THehqPOy8DSXYTYK7USh/view' },
+              { name: 'Feedback Form Greedy Problem Solving', url: 'https://forms.gle/p2JZwMKL7uAUJkoeA' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/950/C' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/898/D' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/771/B' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/154/A' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/250/C' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/293/A' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/328/B' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/333/A' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/436/A' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/494/A' },
+            ]
+          },
+          {
+            id: 'binary-search-adv',
+            icon: '🔍',
+            title: 'Binary Search (Advanced) + Ternary Search',
+            resources: [
+              { name: 'Lecture slides Binary Search + Ternary Search 30-04-2023', url: 'https://drive.google.com/file/d/1bRZTV0EfO3vxr0IHf60HQ5u_iHf8xrFX/view' },
+              { name: 'Feedback Form Binary Search + Ternary Search', url: 'https://forms.gle/k1Pyz9hMMNc6LsvJ6' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/edu/course/2/lesson/6/2/practice/contest/283932/problem/B' },
+              { label: 'Task 2', url: 'https://cses.fi/problemset/task/1620' },
+              { label: 'Task 3', url: 'https://www.spoj.com/problems/AGGRCOW/' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1622/C' },
+              { label: 'Task 5', url: 'https://codeforces.com/contest/847/problem/B' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1610/C' },
+              { label: 'Task 7', url: 'https://codeforces.com/contest/782/problem/B' },
+              { label: 'Task 8', url: 'https://codeforces.com/contest/1619/problem/D' },
+              { label: 'Task 9', url: 'https://codeforces.com/contest/1201/problem/C' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1117/C' },
+              { label: 'Task 11', url: 'https://www.codechef.com/problems/AMCS03' },
+              { label: 'Task 12', url: 'https://cses.fi/problemset/task/2422' },
+              { label: 'Task 13', url: 'https://codeforces.com/problemset/problem/578/C' },
+            ]
+          },
+          {
+            id: 'binary-search-interactive',
+            icon: '🔍',
+            title: 'Problem Solving (Binary Search + Interactive)',
+            resources: [
+              { name: 'Lecture slides Binary search + Interactive', url: 'https://drive.google.com/file/d/15wSZqWAjar2hYfWOda-shIu5Gk8JP23b/view' },
+              { name: 'Feedback Form Binary Search + Interactive', url: 'https://forms.gle/wLphTUed1UokwSGQ7' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/1520/F1' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1425/F' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/493/C' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1624/D' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1486/C1' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1698/D' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1487/D' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1729/E' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'Data Structures & Trees',
+        rating: '1400 → 1800',
+        sections: [
+          {
+            id: 'two-pointers-sliding',
+            icon: '👆',
+            title: '2 Pointers + Sliding Window',
+            resources: [
+              { name: 'Lecture slides Two Pointers 21-05-2023', url: 'https://drive.google.com/file/d/1hogl04t7CGrihq2fRjbHp2v8blWhM_ec/view' },
+              { name: 'Feedback Form Two Pointers', url: 'https://forms.gle/g7r6jfF11XznUCXY9' },
+              { name: 'Lecture slides Sliding Window 24-05-2023', url: 'https://drive.google.com/file/d/1JNcMt7jGPPr6T9hp3Zl5NvOso6zM8BvH/view' },
+              { name: 'Feedback Form Sliding Window', url: 'https://forms.gle/txjzMQTasPhKuKid8' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/edu/course/2/lesson/9/1/practice/contest/307092/problem/C' },
+              { label: 'Task 2', url: 'https://codeforces.com/edu/course/2/lesson/9/2/practice/contest/307093/problem/D' },
+              { label: 'Task 3', url: 'https://codeforces.com/edu/course/2/lesson/9/2/practice/contest/307093/problem/F' },
+              { label: 'Task 4', url: 'https://codeforces.com/edu/course/2/lesson/9/3/practice/contest/307094/problem/B' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/702/C' },
+              { label: 'Task 6', url: 'https://codeforces.com/edu/course/2/lesson/9/3/practice/contest/307094/problem/A' },
+              { label: 'Task 7', url: 'https://codeforces.com/edu/course/2/lesson/9/3/practice/contest/307094/problem/C' },
+              { label: 'Task 8', url: 'https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1251/C' },
+              { label: 'Task 10', url: 'https://leetcode.com/problems/sliding-window-maximum/' },
+              { label: 'Task 11', url: 'https://cses.fi/problemset/task/1644' },
+              { label: 'Task 12', url: 'https://cses.fi/problemset/task/1076' },
+              { label: 'Task 13', url: 'https://leetcode.com/problems/permutation-in-string/' },
+              { label: 'Task 14', url: 'https://cses.fi/problemset/task/1077' },
+              { label: 'Task 15', url: 'https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/' },
+            ]
+          },
+          {
+            id: 'number-theory-adv',
+            icon: '🔢',
+            title: 'Number Theory (Advanced)',
+            resources: [
+              { name: 'Lecture slides Number Theory Advanced 1', url: 'https://drive.google.com/file/d/1maEt1gAso05mTQx25L8uf3TdMDFP8dbk/view' },
+              { name: 'Feedback Form Number Theory Advanced 1', url: 'https://forms.gle/v3qdqSTzCBtZWbor8' },
+              { name: 'Lecture slides Number Theory Advanced 2', url: 'https://drive.google.com/file/d/1PKkHSFZ-s421Bo0EQ3pFM9uXgIlx-8RX/view' },
+              { name: 'Feedback Form Number Theory Advanced 2', url: 'https://forms.gle/gtU7bXT5eXoQzkUJA' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/154/B' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/284/A' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/343/A' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/375/A' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/495/B' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/576/A' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/735/D' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1349/A' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1458/A' },
+              { label: 'Task 10', url: 'https://www.spoj.com/problems/VECTAR8/' },
+              { label: 'Task 11', url: 'https://www.spoj.com/problems/HS08PAUL/' },
+            ]
+          },
+          {
+            id: 'adv-number-theory',
+            icon: '🔢',
+            title: 'Advanced Number Theory',
+            resources: [
+              { name: 'Lecture slides Advanced Number Theory', url: 'https://drive.google.com/file/d/1_mFXLuo3ETDUOd84dKmMMey1MfonkhSf/view' },
+              { name: 'Feedback Form Advanced Number Theory', url: 'https://docs.google.com/forms/d/e/1FAIpQLSdhoZCuhFcggQfZLCu0OG0jLDgRlEsN4n5llXvB8b3EjNZRqg/viewform' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/1828/B' },
+              { label: 'Task 2', url: 'https://codeforces.com/contest/797/problem/A' },
+              { label: 'Task 3', url: 'https://codeforces.com/contest/1360/problem/D' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1679/A' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/230/B' },
+              { label: 'Task 6', url: 'https://www.codechef.com/problems/GCDQ' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1474/B' },
+              { label: 'Task 8', url: 'https://codeforces.com/contest/1656/problem/C' },
+              { label: 'Task 9', url: 'https://cses.fi/problemset/task/2417' },
+              { label: 'Task 10', url: 'https://codeforces.com/contest/1458/problem/A' },
+            ]
+          },
+          {
+            id: 'two-pointers-adv',
+            icon: '👆',
+            title: 'Two Pointers (Advanced)',
+            resources: [
+              { name: 'Lecture slides Two Pointers TLE 2', url: 'https://drive.google.com/file/d/194-29Hif6PbY6BbDOqO3_-YciI3lnmDd/view' },
+              { name: 'Feedback Form Two Pointers TLE 2', url: 'https://forms.gle/JAKfgh3iwm58KkPA7' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/edu/course/2/lesson/9/2/practice/contest/307093/problem/C' },
+              { label: 'Task 2', url: 'https://codeforces.com/edu/course/2/lesson/9/1/practice/contest/307092/problem/C' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1641' },
+              { label: 'Task 4', url: 'https://codeforces.com/edu/course/2/lesson/9/2/practice/contest/307093/problem/D' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/253/B' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/978/C' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/961/B' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/920/C' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1538/C' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1535/C' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/1366/B' },
+            ]
+          },
+          {
+            id: 'range-queries-beg',
+            icon: '🌲',
+            title: 'Range Queries Beginner (Segment Trees)',
+            resources: [
+              { name: 'Lecture slides Segment Trees 30-04-2023', url: 'https://drive.google.com/file/d/1LKwOwkzUHtVqUbz39WbompLbu9LXD3cZ/view' },
+              { name: 'Feedback Form Segment Trees', url: 'https://forms.gle/qdit2yYdggLEaTKF7' },
+              { name: 'Lecture slides Range Queries 2 03-05-2023', url: 'https://drive.google.com/file/d/1Pp812umcLINaxfY70xnhFv2xkfGbrTfW/view' },
+              { name: 'Feedback Form Range Queries 2', url: 'https://forms.gle/J38XnnJqRdeyyQfk9' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/edu/course/2/lesson/4/1/practice/contest/273169/problem/A' },
+              { label: 'Task 2', url: 'https://codeforces.com/edu/course/2/lesson/4/1/practice/contest/273169/problem/B' },
+              { label: 'Task 3', url: 'https://codeforces.com/edu/course/2/lesson/4/1/practice/contest/273169/problem/C' },
+              { label: 'Task 4', url: 'https://codeforces.com/edu/course/2/lesson/4/2/practice/contest/273278/problem/A' },
+              { label: 'Task 5', url: 'https://codeforces.com/edu/course/2/lesson/4/2/practice/contest/273278/problem/B' },
+              { label: 'Task 6', url: 'https://codeforces.com/edu/course/2/lesson/4/2/practice/contest/273278/problem/D' },
+              { label: 'Task 7', url: 'https://codeforces.com/contest/339/problem/D' },
+              { label: 'Task 8', url: 'https://codeforces.com/contest/380/problem/C' },
+              { label: 'Task 9', url: 'https://codeforces.com/edu/course/2/lesson/5/2/practice/contest/279653/problem/A' },
+              { label: 'Task 10', url: 'https://codeforces.com/edu/course/2/lesson/5/2/practice/contest/279653/problem/B' },
+              { label: 'Task 11', url: 'https://codeforces.com/edu/course/2/lesson/5/2/practice/contest/279653/problem/C' },
+              { label: 'Task 12', url: 'https://codeforces.com/contest/52/problem/C' },
+              { label: 'Task 13', url: 'https://codeforces.com/edu/course/2/lesson/4/3/practice/contest/274545/problem/C' },
+              { label: 'Task 14', url: 'https://codeforces.com/contest/242/problem/E' },
+              { label: 'Task 15', url: 'https://cses.fi/problemset/task/2422' },
+              { label: 'Task 16', url: 'https://codeforces.com/problemset/problem/578/C' },
+            ]
+          },
+          {
+            id: 'range-queries-int',
+            icon: '🌲',
+            title: 'Range Queries Intermediate (Fenwick + Lazy)',
+            resources: [
+              { name: 'Lecture slides Fenwick Trees + Sparse Table', url: 'https://drive.google.com/file/d/1obdwS0Us9VdnoyzrBA9O6_28kcem2TQo/view' },
+              { name: 'Feedback Form Generic Segment Trees', url: 'https://forms.gle/Rc5mB8NfKwjsnjHD8' },
+              { name: 'Generic Segment Tree with Lazy Propagation (Template)', url: 'https://github.com/Priyansh19077/CP-Templates/blob/master/Range%20Queries/Lazy_SGT.cpp' },
+              { name: 'Generic Segment Tree (Template)', url: 'https://github.com/Priyansh19077/CP-Templates/blob/master/Range%20Queries/Segment_tree.cpp' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1648' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1709/D' },
+              { label: 'Task 3', url: 'https://codeforces.com/contest/597/problem/C' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/704/A' },
+              { label: 'Task 5', url: 'https://codeforces.com/contest/863/problem/E' },
+              { label: 'Task 6', url: 'https://codeforces.com/contest/276/problem/C' },
+              { label: 'Task 7', url: 'https://codeforces.com/contest/669/problem/E' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/514/D' },
+              { label: 'Task 9', url: 'https://codeforces.com/contest/5/problem/C' },
+              { label: 'Task 10', url: 'https://codeforces.com/contest/482/problem/B' },
+            ]
+          },
+          {
+            id: 'trees-beg',
+            icon: '🌳',
+            title: 'Trees Beginner',
+            resources: [
+              { name: 'Lecture Slides Trees 1 (Introduction)', url: 'https://drive.google.com/file/d/1qwEjWvfP-talBIJHDtVmHl-AJ73_R3bC/view' },
+              { name: 'Feedback Form Trees 1', url: 'https://forms.gle/vPfhHGBWGnqBzwWV6' },
+              { name: 'Lecture slides Trees 2 (Binary Lifting & Euler Tour)', url: 'https://drive.google.com/file/d/172dR1yuinq5JygH1-7dyuFlYPLqgXSvJ/view' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/580/C' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1336/A' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1388/C' },
+              { label: 'Task 4', url: 'https://cses.fi/problemset/task/1131' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1593/E' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1143/C' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/369/C' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/780/C' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/930/A' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1037/D' },
+            ]
+          },
+          {
+            id: 'trees-adv',
+            icon: '🌳',
+            title: 'Trees Advanced (Euler Tour, DP on Trees)',
+            resources: [
+              { name: 'Lecture slides Trees 3 (Euler Tour)', url: 'https://drive.google.com/file/d/1S8CtGNKgQCcMDaIBqS10XNC_-BSn_p_O/view' },
+              { name: 'Feedback Form Trees 3 (Euler Tour)', url: 'https://forms.gle/JAv4ZDkpFJPHXpQH9' },
+              { name: 'Lecture slides Trees 4 (DP on trees)', url: 'https://drive.google.com/file/d/1C8Sz3t5ynSjwGp0qFS5Nh2z_zbqBOeh9/view' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1687' },
+              { label: 'Task 2', url: 'https://cses.fi/problemset/task/1688' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1135' },
+              { label: 'Task 4', url: 'https://cses.fi/problemset/task/1136' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/191/C' },
+              { label: 'Task 6', url: 'https://codeforces.com/contest/1294/problem/F' },
+              { label: 'Task 7', url: 'https://codeforces.com/contest/1324/problem/F' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1092/F' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/685/B' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1746/D' },
+            ]
+          },
+          {
+            id: 'string-hashing',
+            icon: '🔤',
+            title: 'String Hashing and Tricks',
+            resources: [
+              { name: 'Lecture Slides String Hashing and Tricks', url: 'https://drive.google.com/file/d/1o6e17teKvKtjmsdzbJNoDXFvjaktydCI/view' },
+              { name: 'Feedback Form String Hashing and Tricks', url: 'https://forms.gle/KkL1xHizQa7qyKeb8' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1755' },
+              { label: 'Task 2', url: 'https://leetcode.com/problems/group-anagrams' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1753/' },
+              { label: 'Task 4', url: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/' },
+              { label: 'Task 5', url: 'https://cses.fi/problemset/task/1732' },
+              { label: 'Task 6', url: 'https://www.geeksforgeeks.org/count-number-of-distinct-substring-in-a-string/' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/126/B' },
+              { label: 'Task 8', url: 'https://leetcode.com/problems/repeated-dna-sequences' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/385/B' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/271/D' },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+  {
+    id: 'p2',
+    name: 'Phase 2 — Expert → CM+',
+    title: 'Expert to Candidate Master',
+    rating: '1700 → 2100+',
+    desc: 'Graph theory, advanced DP, heavy-light decomposition, centroid decomposition, Mo\'s algorithm, string algorithms, flows, FFT, and geometry. Structured into 9 levels.',
+    color: 'amber',
+    levels: [
+      {
+        name: 'LEVEL 1 — Graph Theory Foundations',
+        rating: '1400 → 1700',
+        sections: [
+          {
+            id: 'p2-bfs-dfs',
+            icon: '🕸',
+            title: 'Graph Representation, BFS & DFS',
+            resources: [
+              { name: 'CP-Algorithms BFS', url: 'https://cp-algorithms.com/graph/breadth-first-search.html' },
+              { name: 'CP-Algorithms DFS', url: 'https://cp-algorithms.com/graph/depth-first-search.html' },
+              { name: 'USACO Guide Silver — Graph Traversal', url: 'https://usaco.guide/silver/graph-traversal?lang=cpp' },
+              { name: 'Codeforces EDU — Graph Theory (BFS, DFS)', url: 'https://codeforces.com/edu/course/2/lesson/10' },
+              { name: 'YouTube — Errichto Graph Theory Part 1', url: 'https://www.youtube.com/watch?v=n_t0a_8H8VY' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1192' },
+              { label: 'Task 2', url: 'https://cses.fi/problemset/task/1193' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1194' },
+              { label: 'Task 4', url: 'https://cses.fi/problemset/task/1666' },
+              { label: 'Task 5', url: 'https://cses.fi/problemset/task/1667' },
+              { label: 'Task 6', url: 'https://cses.fi/problemset/task/1668' },
+              { label: 'Task 7', url: 'https://cses.fi/problemset/task/1669' },
+              { label: 'Task 8', url: 'https://cses.fi/problemset/task/1678' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/277/A' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/862/B' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/1037/D' },
+              { label: 'Task 12', url: 'https://codeforces.com/problemset/problem/580/C' },
+              { label: 'Task 13', url: 'https://codeforces.com/problemset/problem/1072/D' },
+              { label: 'Task 14', url: 'https://codeforces.com/problemset/problem/1176/E' },
+              { label: 'Task 15', url: 'https://codeforces.com/problemset/problem/1907/D' },
+            ]
+          },
+          {
+            id: 'p2-dsu',
+            icon: '🔗',
+            title: 'DSU — Disjoint Set Union (Union Find)',
+            resources: [
+              { name: 'CP-Algorithms DSU (full article)', url: 'https://cp-algorithms.com/data_structures/disjoint_set_union.html' },
+              { name: 'USACO Guide Gold — DSU', url: 'https://usaco.guide/gold/dsu?lang=cpp' },
+              { name: 'Codeforces EDU — DSU Lesson 7', url: 'https://codeforces.com/edu/course/2/lesson/7' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/edu/course/2/lesson/7/1/practice/contest/289390/problem/A' },
+              { label: 'Task 2', url: 'https://codeforces.com/edu/course/2/lesson/7/1/practice/contest/289390/problem/B' },
+              { label: 'Task 3', url: 'https://codeforces.com/edu/course/2/lesson/7/1/practice/contest/289390/problem/C' },
+              { label: 'Task 4', url: 'https://codeforces.com/edu/course/2/lesson/7/1/practice/contest/289390/problem/D' },
+              { label: 'Task 5', url: 'https://codeforces.com/edu/course/2/lesson/7/2/practice/contest/289391/problem/A' },
+              { label: 'Task 6', url: 'https://codeforces.com/edu/course/2/lesson/7/2/practice/contest/289391/problem/B' },
+              { label: 'Task 7', url: 'https://cses.fi/problemset/task/1676' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/566/D' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/722/C' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1131/D' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/1559/D' },
+              { label: 'Task 12', url: 'https://codeforces.com/problemset/problem/1209/G' },
+              { label: 'Task 13', url: 'https://codeforces.com/problemset/problem/1702/F' },
+            ]
+          },
+          {
+            id: 'p2-mst',
+            icon: '🌐',
+            title: 'Minimum Spanning Tree (Kruskal & Prim)',
+            resources: [
+              { name: 'CP-Algorithms MST Kruskal', url: 'https://cp-algorithms.com/graph/mst_kruskal.html' },
+              { name: 'CP-Algorithms MST Prim', url: 'https://cp-algorithms.com/graph/mst_prim.html' },
+              { name: 'USACO Guide Gold — MST', url: 'https://usaco.guide/gold/mst?lang=cpp' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1675' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1245/D' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/160/D' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1108/F' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1059/E' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1093/G' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/888/G' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1528/D' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1207/F' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1442/D' },
+            ]
+          },
+          {
+            id: 'p2-dijkstra',
+            icon: '🗺',
+            title: 'Shortest Paths — Dijkstra & Variants',
+            resources: [
+              { name: 'CP-Algorithms Dijkstra', url: 'https://cp-algorithms.com/graph/dijkstra.html' },
+              { name: 'CP-Algorithms 0-1 BFS', url: 'https://cp-algorithms.com/graph/01_bfs.html' },
+              { name: 'USACO Guide Gold — Shortest Paths', url: 'https://usaco.guide/gold/sp?lang=cpp' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1671' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/20/C' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1674' },
+              { label: 'Task 4', url: 'https://cses.fi/problemset/task/1680' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1547/F' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/449/B' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1442/C' },
+              { label: 'Task 8', url: 'https://cses.fi/problemset/task/1682' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1486/D' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1601/D' },
+              { label: 'Task 11', url: 'https://codeforces.com/problemset/problem/1077/D' },
+              { label: 'Task 12', url: 'https://codeforces.com/problemset/problem/1749/E' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'LEVEL 8 — Network Flows & 2-SAT',
+        rating: '2000 → 2400',
+        sections: [
+          {
+            id: 'p2-flows',
+            icon: '🌊',
+            title: 'Max Flow, Min Cut & Bipartite Matching',
+            resources: [
+              { name: 'CP-Algorithms Max Flow (Dinic)', url: 'https://cp-algorithms.com/graph/dinic.html' },
+              { name: 'CP-Algorithms Bipartite Matching', url: 'https://cp-algorithms.com/graph/kuhn_algorithm.html' },
+              { name: 'USACO Guide Platinum — Flows', url: 'https://usaco.guide/adv/max-flow?lang=cpp' },
+              { name: 'Codeforces blog — Flow network tricks', url: 'https://codeforces.com/blog/entry/68535' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1694' },
+              { label: 'Task 2', url: 'https://cses.fi/problemset/task/1696' },
+              { label: 'Task 3', url: 'https://cses.fi/problemset/task/1711' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/19/E' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1547/G' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/653/E' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/786/E' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1099/F' },
+            ]
+          },
+          {
+            id: 'p2-2sat',
+            icon: '✅',
+            title: '2-SAT',
+            resources: [
+              { name: 'CP-Algorithms 2-SAT', url: 'https://cp-algorithms.com/graph/2SAT.html' },
+              { name: 'Codeforces blog — 2-SAT tutorial', url: 'https://codeforces.com/blog/entry/92977' },
+              { name: 'USACO Guide Platinum — 2-SAT', url: 'https://usaco.guide/adv/2-SAT?lang=cpp' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/1683' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1579/G' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1594/F' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/568/E' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/776/D' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1239/D' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1519/F' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1245/F' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'LEVEL 9 — CM+ Contest Mastery',
+        rating: '2000 → 2400+',
+        sections: [
+          {
+            id: 'p2-fft',
+            icon: '📡',
+            title: 'FFT / NTT — Polynomial Multiplication',
+            resources: [
+              { name: 'CP-Algorithms FFT', url: 'https://cp-algorithms.com/algebra/fft.html' },
+              { name: 'CP-Algorithms NTT', url: 'https://cp-algorithms.com/algebra/ntt.html' },
+              { name: 'GitHub — NTT template (KACTL)', url: 'https://github.com/kth-competitive-programming/kactl/blob/main/content/numerical/FFT.h' },
+              { name: 'Codeforces blog — Complete FFT guide', url: 'https://codeforces.com/blog/entry/43499' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://www.spoj.com/problems/POLYMUL/' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/632/E' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/958/F3' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/755/G' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1054/H' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/662/C' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1100/G' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1096/G' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/901/F' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1398/G' },
+            ]
+          },
+          {
+            id: 'p2-geometry',
+            icon: '📐',
+            title: 'Geometry (Convex Hull, Line Intersection, Sweep)',
+            resources: [
+              { name: 'CP-Algorithms Convex Hull', url: 'https://cp-algorithms.com/geometry/convex-hull.html' },
+              { name: 'CP-Algorithms Line Intersection', url: 'https://cp-algorithms.com/geometry/lines-intersection.html' },
+              { name: 'CP-Algorithms Sweep Line', url: 'https://cp-algorithms.com/geometry/intersecting_segments.html' },
+              { name: 'GitHub — Geometry library (KACTL)', url: 'https://github.com/kth-competitive-programming/kactl/tree/main/content/geometry' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/2195' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/319/C' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1556/E' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/613/D' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/678/F' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1515/G' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1122/F' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1557/G' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/878/C' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1515/H' },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+  {
+    id: 'p3',
+    name: 'Phase 3 — CM → GM+',
+    title: 'Candidate Master to Grandmaster',
+    rating: '2100 → 2600+',
+    desc: 'Advanced polynomial techniques, link-cut trees, suffix automata, advanced DP optimizations, geometry, algebraic structures, and GM-level contest discipline.',
+    color: 'red',
+    levels: [
+      {
+        name: 'LEVEL 10 — Advanced Polynomial Techniques',
+        rating: '2100 → 2400',
+        sections: [
+          {
+            id: 'p3-fps',
+            icon: '📈',
+            title: 'Formal Power Series — Core Operations',
+            resources: [
+              { name: 'CP-Algorithms Polynomial Operations (full)', url: 'https://cp-algorithms.com/algebra/polynomial.html' },
+              { name: 'Codeforces blog — Complete FPS guide (adamant)', url: 'https://codeforces.com/blog/entry/56422' },
+              { name: 'Codeforces blog — Polynomial operations (tourist)', url: 'https://codeforces.com/blog/entry/77404' },
+              { name: 'GitHub — FPS template (KACTL)', url: 'https://github.com/kth-competitive-programming/kactl/blob/main/content/numerical/FFT.h' },
+              { name: 'Codeforces blog — Generating functions in CP', url: 'https://codeforces.com/blog/entry/77468' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/880/E' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1634/F' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1832/F' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1257/G' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/961/G' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1051/G' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1264/F' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1699/E' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1098/G' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1603/G' },
+            ]
+          },
+          {
+            id: 'p3-fwht',
+            icon: '🔀',
+            title: 'Convolutions — XOR, AND, OR (FWHT)',
+            resources: [
+              { name: 'CP-Algorithms FWHT', url: 'https://cp-algorithms.com/algebra/fft.html#toc-tgt-11' },
+              { name: 'Codeforces blog — FWHT complete guide', url: 'https://codeforces.com/blog/entry/71899' },
+              { name: 'Codeforces blog — OR/AND/XOR convolution', url: 'https://codeforces.com/blog/entry/68953' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/662/C' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1336/F' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1363/F' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1208/F' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1616/G' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1033/F' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1868/F' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'LEVEL 11 — Link-Cut Trees & Dynamic Graph Structures',
+        rating: '2200 → 2500',
+        sections: [
+          {
+            id: 'p3-lct',
+            icon: '✂️',
+            title: 'Link-Cut Trees (LCT) — Splay-based Dynamic Trees',
+            resources: [
+              { name: 'CP-Algorithms Link-Cut Tree', url: 'https://cp-algorithms.com/graph/link_cut_tree.html' },
+              { name: 'Codeforces blog — LCT tutorial (complete)', url: 'https://codeforces.com/blog/entry/80383' },
+              { name: 'USACO Guide Platinum — Link-Cut Trees', url: 'https://usaco.guide/adv/LCT?lang=cpp' },
+              { name: 'YouTube — LCT explained (WilliamFiset)', url: 'https://www.youtube.com/watch?v=XZLN6NxEQyY' },
+              { name: 'GitHub — LCT template (KACTL)', url: 'https://github.com/kth-competitive-programming/kactl/blob/main/content/graph/LinkCutTree.h' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://cses.fi/problemset/task/2134' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/117/E' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1739/D' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/704/D' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/916/E' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1442/G' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1681/G' },
+              { label: 'Task 8', url: 'https://codeforces.com/problemset/problem/1580/F' },
+              { label: 'Task 9', url: 'https://codeforces.com/problemset/problem/1098/F' },
+              { label: 'Task 10', url: 'https://codeforces.com/problemset/problem/1495/G' },
+            ]
+          },
+          {
+            id: 'p3-offline-dyn',
+            icon: '🔌',
+            title: 'Offline Dynamic Connectivity (DSU with Rollback)',
+            resources: [
+              { name: 'Codeforces blog — Offline dynamic connectivity', url: 'https://codeforces.com/blog/entry/15296' },
+              { name: 'CP-Algorithms DSU with rollback', url: 'https://cp-algorithms.com/data_structures/disjoint_set_union.html#toc-tgt-12' },
+              { name: 'Codeforces blog — Segment tree on queries', url: 'https://codeforces.com/blog/entry/47094' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/891/C' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1039/D' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1559/D' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1217/F' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1442/H' },
+              { label: 'Task 6', url: 'https://codeforces.com/problemset/problem/1630/F' },
+              { label: 'Task 7', url: 'https://codeforces.com/problemset/problem/1763/H' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'LEVEL 18 — GM Contest Discipline & Mental Models',
+        rating: '2400 → 2600+',
+        sections: [
+          {
+            id: 'p3-gm-discipline',
+            icon: '🏆',
+            title: 'GM Contest Discipline & Practice Plan',
+            resources: [
+              { name: 'Codeforces — Div. 1 past rounds', url: 'https://codeforces.com/contests?complete=true' },
+              { name: 'AtCoder Grand Contest problems', url: 'https://atcoder.jp/contests/archive?category=200&lang=en' },
+              { name: 'USACO Platinum problems', url: 'https://usaco.org/index.php?page=contests' },
+              { name: 'Codeforces blog — How to practice (tourist)', url: 'https://codeforces.com/blog/entry/47094' },
+              { name: 'Codeforces blog — How GMs think about problems', url: 'https://codeforces.com/blog/entry/92248' },
+              { name: 'tourist\'s GitHub templates', url: 'https://github.com/the-tourist/algo' },
+              { name: 'KACTL team notebook', url: 'https://github.com/kth-competitive-programming/kactl' },
+              { name: 'Book — "How to Solve It" (Polya)', url: 'https://press.princeton.edu/books/paperback/9780691164076/how-to-solve-it' },
+              { name: 'Book — "Competitive Programming 4" (Halim)', url: 'https://cpbook.net/' },
+            ],
+            tasks: [
+              { label: 'Task 1', url: 'https://codeforces.com/problemset/problem/1603/F' },
+              { label: 'Task 2', url: 'https://codeforces.com/problemset/problem/1473/G' },
+              { label: 'Task 3', url: 'https://codeforces.com/problemset/problem/1511/I' },
+              { label: 'Task 4', url: 'https://codeforces.com/problemset/problem/1515/H' },
+              { label: 'Task 5', url: 'https://codeforces.com/problemset/problem/1868/G' },
+              { label: 'Task 6', url: 'https://atcoder.jp/contests/agc005/tasks/agc005_f' },
+              { label: 'Task 7', url: 'https://atcoder.jp/contests/agc006/tasks/agc006_f' },
+              { label: 'Task 8', url: 'https://atcoder.jp/contests/agc008/tasks/agc008_f' },
+              { label: 'Task 9', url: 'https://atcoder.jp/contests/agc032/tasks/agc032_f' },
+              { label: 'Task 10', url: 'https://oj.uz/problem/view/IOI14_game' },
+            ]
+          },
+        ]
+      },
+    ]
+  }
+];
+
+// ============================================================
+// STORAGE HELPERS
+// ============================================================
+function getKey(type, id) { return `cp_roadmap_${type}_${id}`; }
+function isDone(taskId) { return localStorage.getItem(getKey('task', taskId)) === '1'; }
+function setDone(taskId, val) { localStorage.setItem(getKey('task', taskId), val ? '1' : '0'); }
+function getNotes(sectionId) { return localStorage.getItem(getKey('notes', sectionId)) || ''; }
+function setNotes(sectionId, val) { localStorage.setItem(getKey('notes', sectionId), val); }
+
+// ============================================================
+// PLATFORM DETECTION
+// ============================================================
+function getPlatform(url) {
+  if (url.includes('codeforces.com')) return { cls: 'plat-cf', label: 'CF' };
+  if (url.includes('leetcode.com')) return { cls: 'plat-lc', label: 'LC' };
+  if (url.includes('cses.fi')) return { cls: 'plat-cses', label: 'CSES' };
+  if (url.includes('atcoder.jp')) return { cls: 'plat-atcoder', label: 'AT' };
+  if (url.includes('spoj.com')) return { cls: 'plat-spoj', label: 'SPOJ' };
+  if (url.includes('geeksforgeeks') || url.includes('practice.geeksforgeeks')) return { cls: 'plat-gfg', label: 'GFG' };
+  return { cls: 'plat-other', label: 'OJ' };
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function getSectionTaskCount(section) {
+  return { total: section.tasks.length, done: section.tasks.filter((t,i) => isDone(section.id + '_' + i)).length };
+}
+
+function renderSection(section, phaseId) {
+  const { total, done } = getSectionTaskCount(section);
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+  const notes = getNotes(section.id);
+
+  return `
+    <div class="section-card" id="card-${section.id}">
+      <div class="section-card-header" onclick="toggleSection('${section.id}')">
+        <div class="section-icon ${phaseId}">${section.icon}</div>
+        <div class="section-title">${section.title}</div>
+        <div class="section-meta">
+          <div class="section-progress-bar">
+            <div class="section-progress-fill" style="width:${pct}%" id="prog-${section.id}"></div>
+          </div>
+          <span class="section-count" id="cnt-${section.id}">${done}/${total}</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="section-body">
+        ${section.resources.length ? `
+        <div class="resources-block">
+          <div class="block-label">📚 Resources</div>
+          ${section.resources.map(r => `
+            <div class="resource-item">
+              <span class="resource-bullet">→</span>
+              <a class="resource-link" href="${r.url}" target="_blank" rel="noopener">${r.name}</a>
+            </div>
+          `).join('')}
+        </div>` : ''}
+
+        <div class="tasks-block">
+          <div class="block-label">✏️ Practice Tasks</div>
+          <div class="tasks-grid">
+            ${section.tasks.map((t, i) => {
+              const taskId = section.id + '_' + i;
+              const done = isDone(taskId);
+              const plat = getPlatform(t.url);
+              return `
+                <div class="task-item ${done ? 'done' : ''}" id="taskitem-${taskId}">
+                  <div class="task-checkbox" onclick="toggleTask('${section.id}','${taskId}','${phaseId}')">✓</div>
+                  <span class="task-label">${t.label}</span>
+                  <a class="task-link" href="${t.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${t.url.split('/').slice(-1)[0] || t.url}</a>
+                  <span class="task-platform ${plat.cls}">${plat.label}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="notes-block">
+          <div class="block-label">📝 Personal Notes</div>
+          <textarea 
+            class="notes-textarea" 
+            id="notes-${section.id}"
+            placeholder="Add your notes, key insights, approaches, time taken..."
+            onchange="saveNotes('${section.id}')"
+            oninput="saveNotes('${section.id}')"
+          >${notes}</textarea>
+          <div class="notes-saved-indicator" id="notesind-${section.id}">saved</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderLevel(level, phaseId, levelIdx) {
+  const sections = level.sections.map(s => getSectionTaskCount(s));
+  const totalT = sections.reduce((a, b) => a + b.total, 0);
+  const doneT = sections.reduce((a, b) => a + b.done, 0);
+  const pct = totalT > 0 ? Math.round((doneT/totalT)*100) : 0;
+
+  return `
+    <div class="level-block" id="level-${phaseId}-${levelIdx}">
+      <div class="level-header ${phaseId}">
+        <div class="level-number ${phaseId}">LVL ${levelIdx+1}</div>
+        <div class="level-info">
+          <div class="level-name">${level.name}</div>
+          <div class="level-rating">${level.rating}</div>
+        </div>
+        <div class="level-progress-wrap ${phaseId}">
+          <div class="level-progress-bar">
+            <div class="level-progress-fill" style="width:${pct}%" id="lvlprog-${phaseId}-${levelIdx}"></div>
+          </div>
+          <span class="level-progress-text" id="lvlcnt-${phaseId}-${levelIdx}">${doneT}/${totalT}</span>
+        </div>
+      </div>
+      ${level.sections.map(s => renderSection(s, phaseId)).join('')}
+    </div>
+  `;
+}
+
+function renderPhase(phase) {
+  const allSections = phase.levels.flatMap(l => l.sections);
+  const counts = allSections.map(s => getSectionTaskCount(s));
+  const total = counts.reduce((a,b) => a+b.total, 0);
+  const done = counts.reduce((a,b) => a+b.done, 0);
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  return `
+    <div class="phase-section ${phase.id === 'p1' ? 'active' : ''}" id="phase-${phase.id}">
+      <div class="phase-header">
+        <div class="phase-badge ${phase.id}">${phase.name}</div>
+        <div class="phase-title">${phase.title}</div>
+        <div class="phase-desc">${phase.desc}</div>
+      </div>
+      
+      <div class="overview-bar">
+        <div class="overview-card">
+          <div class="ov-label">TASKS COMPLETED</div>
+          <div class="ov-value ${phase.id}" id="ov-done-${phase.id}">${done}</div>
+          <div class="ov-bar"><div class="ov-bar-fill ${phase.id}" style="width:${pct}%" id="ov-bar-${phase.id}"></div></div>
+        </div>
+        <div class="overview-card">
+          <div class="ov-label">TOTAL TASKS</div>
+          <div class="ov-value ${phase.id}">${total}</div>
+          <div class="ov-bar"><div class="ov-bar-fill ${phase.id}" style="width:100%"></div></div>
+        </div>
+        <div class="overview-card">
+          <div class="ov-label">COMPLETION</div>
+          <div class="ov-value ${phase.id}" id="ov-pct-${phase.id}">${pct}%</div>
+          <div class="ov-bar"><div class="ov-bar-fill ${phase.id}" style="width:${pct}%" id="ov-pctbar-${phase.id}"></div></div>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" placeholder="Search sections, topics..." oninput="filterSections(this.value, '${phase.id}')">
+      </div>
+
+      <button class="expand-all-btn" onclick="expandAll('${phase.id}')">⊞ Expand all sections</button>
+
+      ${phase.levels.map((l, i) => renderLevel(l, phase.id, i)).join('')}
+    </div>
+  `;
+}
+
+function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = PHASES.map(phase => {
+    const colorMap = { p1: 'var(--green)', p2: 'var(--amber)', p3: 'var(--red)' };
+    return `
+      <div class="sidebar-phase">
+        <div class="sidebar-phase-header" onclick="showPhase('${phase.id}')">
+          <div class="phase-dot" style="background:${colorMap[phase.id]}"></div>
+          ${phase.name}
+        </div>
+        ${phase.levels.map((level, li) => `
+          <div class="sidebar-level-label">${level.name}</div>
+          ${level.sections.map(s => {
+            const { total, done } = getSectionTaskCount(s);
+            return `<a class="sidebar-link" href="#card-${s.id}" onclick="openSection('${s.id}')">
+              <span>${s.icon} ${s.title}</span>
+              <span class="progress-mini">${done}/${total}</span>
+            </a>`;
+          }).join('')}
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+function showPhase(phaseId) {
+  document.querySelectorAll('.phase-section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.phase-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('phase-' + phaseId)?.classList.add('active');
+  const tab = Array.from(document.querySelectorAll('.phase-tab')).find(t => t.getAttribute('onclick').includes(phaseId));
+  if (tab) tab.classList.add('active');
+}
+
+function toggleSection(id) {
+  const card = document.getElementById('card-' + id);
+  card?.classList.toggle('open');
+}
+
+function openSection(id) {
+  const card = document.getElementById('card-' + id);
+  if (card && !card.classList.contains('open')) {
+    card.classList.add('open');
+  }
+}
+
+function expandAll(phaseId) {
+  const phase = document.getElementById('phase-' + phaseId);
+  phase?.querySelectorAll('.section-card').forEach(c => c.classList.add('open'));
+}
+
+function toggleTask(sectionId, taskId, phaseId) {
+  const current = isDone(taskId);
+  setDone(taskId, !current);
+  
+  const item = document.getElementById('taskitem-' + taskId);
+  if (item) item.classList.toggle('done', !current);
+  
+  // Update section progress
+  const section = PHASES.flatMap(p => p.levels).flatMap(l => l.sections).find(s => s.id === sectionId);
+  if (section) {
+    const { total, done } = getSectionTaskCount(section);
+    const pct = total > 0 ? Math.round((done/total)*100) : 0;
+    const progEl = document.getElementById('prog-' + sectionId);
+    const cntEl = document.getElementById('cnt-' + sectionId);
+    if (progEl) progEl.style.width = pct + '%';
+    if (cntEl) cntEl.textContent = done + '/' + total;
+  }
+  
+  // Update level and phase overview
+  updateStats(phaseId);
+}
+
+function updateStats(phaseId) {
+  const phase = PHASES.find(p => p.id === phaseId);
+  if (!phase) return;
+  
+  const allSections = phase.levels.flatMap(l => l.sections);
+  const counts = allSections.map(s => getSectionTaskCount(s));
+  const total = counts.reduce((a,b) => a+b.total, 0);
+  const done = counts.reduce((a,b) => a+b.done, 0);
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  const ovDone = document.getElementById('ov-done-' + phaseId);
+  const ovPct = document.getElementById('ov-pct-' + phaseId);
+  const ovBar = document.getElementById('ov-bar-' + phaseId);
+  const ovPctBar = document.getElementById('ov-pctbar-' + phaseId);
+  if (ovDone) ovDone.textContent = done;
+  if (ovPct) ovPct.textContent = pct + '%';
+  if (ovBar) ovBar.style.width = pct + '%';
+  if (ovPctBar) ovPctBar.style.width = pct + '%';
+
+  // Update level progress
+  phase.levels.forEach((level, li) => {
+    const lCounts = level.sections.map(s => getSectionTaskCount(s));
+    const lTotal = lCounts.reduce((a,b) => a+b.total, 0);
+    const lDone = lCounts.reduce((a,b) => a+b.done, 0);
+    const lPct = lTotal > 0 ? Math.round((lDone/lTotal)*100) : 0;
+    const lpEl = document.getElementById('lvlprog-' + phaseId + '-' + li);
+    const lcEl = document.getElementById('lvlcnt-' + phaseId + '-' + li);
+    if (lpEl) lpEl.style.width = lPct + '%';
+    if (lcEl) lcEl.textContent = lDone + '/' + lTotal;
+  });
+
+  // Global stats
+  updateGlobalStats();
+
+  // Sidebar
+  renderSidebar();
+}
+
+function updateGlobalStats() {
+  let total = 0, done = 0;
+  PHASES.forEach(p => {
+    p.levels.forEach(l => {
+      l.sections.forEach(s => {
+        const c = getSectionTaskCount(s);
+        total += c.total;
+        done += c.done;
+      });
+    });
+  });
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-total').textContent = total;
+}
+
+let saveTimers = {};
+function saveNotes(sectionId) {
+  const el = document.getElementById('notes-' + sectionId);
+  const ind = document.getElementById('notesind-' + sectionId);
+  if (!el) return;
+  setNotes(sectionId, el.value);
+  if (saveTimers[sectionId]) clearTimeout(saveTimers[sectionId]);
+  if (ind) {
+    ind.textContent = 'saving...';
+    ind.classList.remove('show');
+    saveTimers[sectionId] = setTimeout(() => {
+      ind.textContent = '✓ saved';
+      ind.classList.add('show');
+      setTimeout(() => ind.classList.remove('show'), 1500);
+    }, 600);
+  }
+}
+
+function filterSections(query, phaseId) {
+  const q = query.toLowerCase();
+  const phase = document.getElementById('phase-' + phaseId);
+  if (!phase) return;
+  phase.querySelectorAll('.section-card').forEach(card => {
+    const title = card.querySelector('.section-title')?.textContent.toLowerCase() || '';
+    card.style.display = (!q || title.includes(q)) ? '' : 'none';
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  const main = document.getElementById('main-content');
+  main.innerHTML = PHASES.map(p => renderPhase(p)).join('');
+  renderSidebar();
+  updateGlobalStats();
+}
+
+init();
+</script>
+</body>
+</html>
